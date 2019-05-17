@@ -3,10 +3,10 @@ import world
 from enum import Enum
 
 class direction(Enum):
-    NORTH = 1
-    SOUTH = 2
-    EAST = 3
-    WEST = 4
+    north = 1
+    south = 2
+    east = 3
+    west = 4
 
 def unpack(list_of_strings):
     return "\n".join(string for string in list_of_strings)
@@ -48,30 +48,11 @@ class Player:
     def move(self, dir):
         current_room_exits = self.current_room.get_exits()
 
-        if dir == direction.NORTH:
-            if 'north' in current_room_exits:
-                new_room_id = current_room_exits['north'][0]
-                self.current_room = world.world_state[new_room_id]
-            else:
-                print("You can't go that direction!")
-        elif dir == direction.SOUTH:
-            if 'south' in current_room_exits:
-                new_room_id = current_room_exits['south'][0]
-                self.current_room = world.world_state[new_room_id]
-            else:
-                print("You can't go that direction!")
-        elif dir == direction.EAST:
-            if 'east' in current_room_exits:
-                new_room_id = current_room_exits['east'][0]
-                self.current_room = world.world_state[new_room_id]
-            else:
-                print("You can't go that direction!")
-        elif dir == direction.WEST:
-            if 'west' in current_room_exits:
-                new_room_id = current_room_exits['west'][0]
-                self.current_room = world.world_state[new_room_id]
-            else:
-                print("You can't go that direction!")
+        if dir.name in current_room_exits:
+            new_room_id = current_room_exits[dir.name][0]
+            self.current_room = world.world_state[new_room_id]
+        else:
+            print("You can't go that direction!")
       
 class Item:
     def __init__(self, name, description, weight):

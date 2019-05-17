@@ -23,13 +23,13 @@ def play():
         action_input = get_player_command()
 
         if action_input == 'n' or action_input == 'N':
-            p.move(direction.NORTH)
+            p.move(direction.north)
         elif action_input == 's' or action_input == 'S':
-            p.move(direction.SOUTH)
+            p.move(direction.south)
         elif action_input == 'e' or action_input == 'E':
-            p.move(direction.EAST)
+            p.move(direction.east)
         elif action_input == 'w' or action_input == 'W':
-            p.move(direction.WEST)
+            p.move(direction.west)
         elif action_input == 'quit' or action_input == 'q':
             exit()
         else:
