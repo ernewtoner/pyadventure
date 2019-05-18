@@ -1,0 +1,10 @@
+{
+    "Fountain": {
+        "ROOM_ID": 1,
+        "GROUNDDESC": "A magnificent fountain is at the center of the square.",
+        "SHORTDESC": "a fountain",
+        "LONGDESC": "The water in the fountain - long description",
+        "TAKEABLE": 0,
+        "KEYWORDS": ["fountain"]
+    }
+}

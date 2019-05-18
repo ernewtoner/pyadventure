@@ -2,7 +2,6 @@
     "North Y Street": {
         "ID": 2,
         "DESC": "The northern end of Y Street has really gone down hill. Pot holes are everywhere, as are stray cats, rats, and wombats.",
-        "SOUTH": [1, "Town Square"],
-        "OBJECTS": ["Do Not Take Sign Sign"]
+        "SOUTH": [1, "Town Square"]
     }
 }

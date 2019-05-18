@@ -1,0 +1,10 @@
+{
+    "Welcome Sign": {
+        "ROOM_ID": 1,
+        "GROUNDDESC": "A Welcome Sign is planted in the ground here.",
+        "SHORTDESC": "a Welcome Sign",
+        "LONGDESC": "A sign is posted here that seems to be specifically for you.",
+        "TAKEABLE": "False",
+        "KEYWORDS": ["sign", "welcome", "welcome sign"]
+    }
+}

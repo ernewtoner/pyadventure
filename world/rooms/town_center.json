@@ -2,7 +2,6 @@
     "Town Square": {
         "ID": 1,
         "DESC": "The town square is a large open space with a fountain in the center. Streets lead in all directions.",
-        "NORTH": [2, "North Y Street"],
-        "OBJECTS": ["A Welcome Sign is planted in the ground here.", "A magnificent fountain is at the center of the square."]
+        "NORTH": [2, "North Y Street"]
     }
 }
