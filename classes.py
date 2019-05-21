@@ -38,6 +38,14 @@ class Room:
     def get_items(self):
         return self.items
 
+    def add_item(self, item):
+        item_key = item.get_key()
+        self.items[item_key] = item
+
+    def remove_item(self, item_key):
+        del self.items[item_key]
+
+
 class Player:
     def __init__(self, name, current_room):
         self.name = name
@@ -46,6 +54,9 @@ class Player:
 
     def get_current_room_id(self):
         return self.current_room.get_id()
+    
+    def get_inventory(self):
+        return self.inventory
     
     # Returns true if move was successful, false if not
     def move(self, dir):
@@ -59,6 +70,15 @@ class Player:
             print("You can't go that direction!")
             return False
 
+    def display_inventory(self):
+        print("-----Inventory----")
+        for item in self.inventory:
+            print(item.get_short_desc())
+
+    def add_item_to_inventory(self, item):
+        self.inventory.append(item)
+
+
 class Item:
     def __init__(self, key, room_id, ground_desc, short_desc, long_desc, takeable, keywords):
         self.key = key # The key is the unique identifier defined in the item's JSON file
@@ -66,7 +86,7 @@ class Item:
         self.ground_desc = ground_desc
         self.short_desc = short_desc
         self.long_desc = long_desc
-        self.takeable = takeable
+        self.takeable = takeable # Either a 1 or 0
         self.keywords = keywords
     
     def get_key(self):
@@ -78,8 +98,14 @@ class Item:
     def get_keywords(self):
         return self.keywords
     
+    def get_short_desc(self):
+        return self.short_desc
+
     def get_long_desc(self):
         return self.long_desc
+
+    def is_takeable(self):
+        return self.takeable
 
     def __repr__(self):
         return f"{LCYAN}{self.ground_desc}{ENDC}"

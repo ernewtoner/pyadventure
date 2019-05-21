@@ -4,7 +4,7 @@
         "GROUNDDESC": "A Welcome Sign is planted in the ground here.",
         "SHORTDESC": "a Welcome Sign",
         "LONGDESC": "A sign is posted here that seems to be specifically for you.",
-        "TAKEABLE": "False",
+        "TAKEABLE": 0,
         "KEYWORDS": ["sign", "welcome", "welcome sign"]
     }
 }
