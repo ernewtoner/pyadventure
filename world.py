@@ -9,7 +9,8 @@ def process_room_data(data):
     for key, subdict in data.items():
         name = key
         id = subdict["ID"]
-        description = subdict["DESC"]
+        long_desc = subdict["LONGDESC"]
+        short_desc = subdict["SHORTDESC"]
 
         exits = {}
         # Convert list stored in file to {'north' : (RoomID, "Room Name") } format then add to exits dictionary
@@ -25,7 +26,7 @@ def process_room_data(data):
         # Dictionary of Items to be populated when item files are processed
         items = {}
 
-        room = classes.Room(id, name, description, exits, items)
+        room = classes.Room(id, name, long_desc, short_desc, exits, items)
         return room
 
 def process_item_data(data):
@@ -39,7 +40,7 @@ def process_item_data(data):
         takeable = subdict["TAKEABLE"]
         keywords = subdict["KEYWORDS"]
 
-        item = classes.Item(key_from_file, room_id, ground_desc, short_desc, long_desc, takeable, keywords)
+        item = classes.Object(key_from_file, room_id, ground_desc, short_desc, long_desc, takeable, keywords)
         return item
 
 def load_item_data(world):
@@ -79,10 +80,6 @@ def save_world_state(world, player):
         pickle.dump(world.world_state, world_state_file)
     with open('world/saved_player_state', 'wb') as player_state_file:
         pickle.dump(player, player_state_file)
-    #print("Saved world state:")
-    #print(world.world_state)
-    #print("Saved player state:")
-    #rint(player)
 
 def load_world_state(player):
     os.system('cls||clear')
@@ -92,10 +89,6 @@ def load_world_state(player):
     with open('world/saved_player_state', 'rb') as player_state_file:
         saved_player = pickle.load(player_state_file)
 
-    #print("Saved world state:")
-    #print(world_state)
-    #print("Saved player state:")
-    #print(saved_player)
     return saved_world_state, saved_player
 
 def init_world():

@@ -8,26 +8,33 @@ class direction(Enum):
     west = 4
 
 class World:
+    """ Wrapper to hold the state of all the rooms and objects in the world (world_state) """
     def __init__(self, world_state):
         self.world_state = world_state # Dictionary in the form { room_id: Room object}
 
 # String helper function to split up items on seperate lines
 def unpack(items):
-    return "\n".join(str(item) for item in items)
+    return "\n".join(str(item.display()) for item in items)
 
 class Room:
     """ A single room's attributes """
-    def __init__(self, id, name, description, exits, items):
+    def __init__(self, id, name, long_desc, short_desc, exits, items):
         self.id = id
         self.name = name
-        self.description = description
+        self.long_desc = long_desc
+        self.short_desc = short_desc
         self.exits = exits # Dictionary of exits in the format {'north' : (room_id, "Room Name") } 
-        self.items = items # Dictionary of Items in {'key': Item} form
+        self.items = items # Dictionary of Objects in {'key': Object} form
 
-    def __repr__(self):
-        return (
+    def display(self, display_long_desc):
+        if display_long_desc:
+            desc = self.long_desc
+        else:
+            desc = self.short_desc
+
+        print (
             f"{WHITE}{self.name}{ENDC}\n"
-            f"{self.description}\n" 
+            f"{desc}\n" 
             f"Exits: [ {str(*self.exits)} ]\n"
             f"{unpack(self.items.values())}"
         )
@@ -51,6 +58,7 @@ class Player:
     def __init__(self, name, current_room):
         self.name = name
         self.current_room = current_room
+        self.visited_rooms = [current_room.get_id()] # List of visited room IDs
         self.inventory = []
         self.equipment = []
 
@@ -60,8 +68,8 @@ class Player:
         self.inventory = inventory
         self.equipment = equipment
     
-    def __repr__(self):
-        return (
+    def display(self):
+        print (
             f"{WHITE}{self.name}{ENDC}\n"
             f"Current Room: {self.current_room.get_id()}\n"
             f"Inventory: {self.inventory}"
@@ -80,14 +88,19 @@ class Player:
     # Returns true if move was successful, false if not
     def move(self, world, dir):
         current_room_exits = self.current_room.get_exits()
+        display_long_desc = False
 
         if dir.name in current_room_exits:
             new_room_id = current_room_exits[dir.name][0]
             self.current_room = world.world_state[new_room_id]
-            return True
+            if new_room_id not in self.visited_rooms:
+                display_long_desc = True
+                self.visited_rooms.append(new_room_id)
+
+            return True, display_long_desc
         else:
             print("You can't go that direction!")
-            return False
+            return False, False
 
     def display_inventory(self):
         print("-----Inventory----")
@@ -114,7 +127,7 @@ class Player:
         self.equipment.remove(item)
 
 
-class Item:
+class Object:
     def __init__(self, key, room_id, ground_desc, short_desc, long_desc, takeable, keywords):
         self.key = key # The key is the unique identifier defined in the item's JSON file
         self.room_id = room_id # Room item is stored in (0 for inventory)
@@ -142,5 +155,5 @@ class Item:
     def is_takeable(self):
         return self.takeable
 
-    def __repr__(self):
+    def display(self):
         return f"{LCYAN}{self.ground_desc}{ENDC}"

@@ -21,8 +21,8 @@ def play():
     # Init player with starting Room
     p = init_player(w.world_state[START_ROOM])
 
-    # Display the starting Room
-    display_room(w, START_ROOM)
+    # Display the starting Room with long description
+    display_room(w, START_ROOM, True)
 
     while True:
         action_input = get_player_command()
@@ -59,18 +59,20 @@ def play():
             print("Invalid action!\n")
 
 def process_standalone_cmd(p, w, action_input):
-    update_room_display = False
+    update_room_display = False # Flag for whether the room needs to be re-displayed
+    display_long_desc = False # Flag for whether the room long desc or short desc should be printed
 
     if action_input in ('n', 'north'):
-        update_room_display = p.move(w, direction.north)
+        update_room_display, display_long_desc = p.move(w, direction.north)
     elif action_input in ('s', 'south'):
-        update_room_display = p.move(w, direction.south)
+        update_room_display, display_long_desc = p.move(w, direction.south)
     elif action_input in ('e', 'east'):
-        update_room_display = p.move(w, direction.east)
+        update_room_display, display_long_desc = p.move(w, direction.east)
     elif action_input in ('w', 'west'):
-        update_room_display = p.move(w, direction.west)
+        update_room_display, display_long_desc = p.move(w, direction.west)
     elif action_input in ('l', 'look'):
         update_room_display = True
+        display_long_desc = True
     elif action_input in ('g', 'get'):
         print("Get what?\n")
     elif action_input in ('t', 'take'):
@@ -89,8 +91,6 @@ def process_standalone_cmd(p, w, action_input):
         w.world_state, saved_player = load_world_state(p)
         p.copy(saved_player.name, saved_player.current_room, saved_player.inventory, saved_player.equipment)
         update_room_display = True
-        print("new player within game")
-        print(p)
     elif action_input in ('h', 'help'):
         display_help()
     elif action_input in ('q', 'quit'):
@@ -100,7 +100,7 @@ def process_standalone_cmd(p, w, action_input):
 
     # If the player moved rooms or entered 'look' action re-display room
     if update_room_display:
-        display_room(w, p.get_current_room_id())
+        display_room(w, p.get_current_room_id(), display_long_desc)
 
 def process_look_cmd(p, current_room, args):
     current_room_items = current_room.get_items()
@@ -170,7 +170,7 @@ def process_drop_cmd(p, current_room, args):
             p.remove_item_from_inventory(item)
             return # Ignore further command arguments
     else:
-        print("You don't have that to drop!.\n")
+        print("You don't have that to drop!\n")
 
 def display_help():
     print("-----Available Commands----")
@@ -178,9 +178,11 @@ def display_help():
     print("World actions: get <arg>, drop <arg>, look <arg>")
     print("Player actions: inventory, equipment, wear <arg>, remove <arg>, say <arg>\n")
 
-def display_room(w, room_id):
+def display_room(w, room_id, display_long_desc_flag):
+    room = w.world_state[room_id]
+
     if room_id in w.world_state:
-        print(w.world_state[room_id])
+        room.display(display_long_desc_flag)
     else:
         print("Room does not exist!")
 
