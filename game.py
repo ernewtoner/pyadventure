@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 import os
 from world_state import * # world_state dictionary and constants
-from world import init_player, load_map_data, load_item_data
+from world import init_player, load_map_data, load_item_data, save_world_state, load_world_state
 from classes import Player, direction
+from colors import *
 
 # Clear screen
 os.system('cls||clear')
@@ -14,10 +15,10 @@ def play():
     load_map_data()
     load_item_data()
 
-    # Init player with starting room
+    # Init player with starting Room
     p = init_player(world_state[START_ROOM])
 
-    # Display the starting room
+    # Display the starting Room
     display_room(START_ROOM)
 
     while True:
@@ -33,16 +34,29 @@ def play():
 
         if len(cmd) == 1:
             process_standalone_cmd(p, cmd[0])
+        elif len(cmd) == 0: # No input
+            continue
+        elif len(cmd) > 1 and cmd[0] in ('l', 'look') and cmd[1] in ('at', 'in'):
+            process_look_cmd(p, current_room, cmd[2:])
         elif len(cmd) > 1 and cmd[0] in ('l', 'look'):
             process_look_cmd(p, current_room, cmd[1:])
         elif len(cmd) > 1 and cmd[0] in ('t', 'take', 'get'):
-            process_take_cmd(p, current_room, cmd[1:])
+            process_get_cmd(p, current_room, cmd[1:])
+        elif len(cmd) > 1 and cmd[0] == 'pick' and cmd[1] == 'up':
+            process_get_cmd(p, current_room, cmd[2:])
+        elif len(cmd) > 1 and cmd[0] in ('eq', 'wear', 'equip'):
+            process_equip_cmd(p, cmd[1:])
+        elif len(cmd) > 1 and cmd[0] in ('remove', 'unequip'):
+            process_equip_remove_cmd(p, cmd[1:])       
         elif len(cmd) > 1 and cmd[0] in ('d', 'drop'):
             process_drop_cmd(p, current_room, cmd[1:])
+        elif len(cmd) > 1 and cmd[0] in ('sa', 'say'):
+            print(f"{WHITE}You say, '{' '.join(cmd[1:])}'{ENDC}") # converts to lowercase
         else:
-            print("Invalid action!")
+            print("Invalid action!\n")
 
 def process_standalone_cmd(p, action_input):
+    global world_state
     update_room_display = False
 
     if action_input in ('n', 'north'):
@@ -53,18 +67,34 @@ def process_standalone_cmd(p, action_input):
         update_room_display = p.move(direction.east)
     elif action_input in ('w', 'west'):
         update_room_display = p.move(direction.west)
-    elif action_input in ('i', 'inv', 'inventory'):
-        p.display_inventory()
     elif action_input in ('l', 'look'):
         update_room_display = True
     elif action_input in ('g', 'get'):
-        print("Get what?")
+        print("Get what?\n")
     elif action_input in ('t', 'take'):
-        print("Take what?")
-    elif action_input == 'quit' or action_input == 'q':
+        print("Take what?\n")
+    elif action_input in ('d', 'drop'):
+        print("Drop what?\n")
+    elif action_input in ('wear'):
+        print("Wear what?\n")
+    elif action_input in ('i', 'in', 'inv', 'inventory'):
+        p.display_inventory()
+    elif action_input in ('eq', 'equip', 'equipment'):
+        p.display_equipment()
+    elif action_input in ('save', 'savegame'):
+        save_world_state(p)
+    elif action_input in ('load', 'loadgame'):
+        world_state, saved_player = load_world_state(p)
+        p.copy(saved_player.name, saved_player.current_room, saved_player.inventory, saved_player.equipment)
+        update_room_display = True
+        #print("new player within game")
+        #print(p)
+    elif action_input in ('h', 'help'):
+        display_help()
+    elif action_input in ('q', 'quit'):
         exit()
     else:
-        print("Invalid action!")
+        print("Invalid action!\n")
 
     # If the player moved rooms or entered 'look' action re-display room
     if update_room_display:
@@ -72,30 +102,61 @@ def process_standalone_cmd(p, action_input):
 
 def process_look_cmd(p, current_room, args):
     current_room_items = current_room.get_items()
+    inventory_items = p.get_inventory()
 
     # For the Items in the current room, check if the first arg of the command matches any of the Item's keywords
     for item in current_room_items.values():
         if args[0] in item.get_keywords():
             print(item.get_long_desc())
             return # Ignore further command arguments
-    else:
-        print("There isn't an item with that name here!")
 
-def process_take_cmd(p, current_room, args):
+    # If not in room items, check the player's inventory items
+    for item in inventory_items:
+        if args[0] in item.get_keywords():
+            print(item.get_long_desc())
+            return # Ignore further command arguments
+    else:
+        print("There isn't an item with that name here!\n")
+
+def process_get_cmd(p, current_room, args):
     current_room_items = current_room.get_items()
 
     # For the Items in the current room, check if the first arg of the command matches any of the Item's keywords
     for item in current_room_items.values():
         if args[0] in item.get_keywords():
             if item.is_takeable():
-                print("You pick up the {}.".format(item.get_short_desc()))
+                print(f"You pick up the {item.get_short_desc()}.\n")
                 p.add_item_to_inventory(item)
                 current_room.remove_item(item.get_key())
             else:
-                print("You can't pick that up!")
+                print("You can't pick that up!\n")
             return # Ignore further command arguments
     else:
-        print("There isn't an item with that name here!")
+        print("There isn't an item with that name here!\n")
+
+def process_equip_cmd(p, args):
+    inventory_items = p.get_inventory()
+
+    for item in inventory_items:
+        if args[0] in item.get_keywords():
+            print(f"You equip the {item.get_short_desc()}.\n")
+            p.add_item_to_equipment(item)
+            p.remove_item_from_inventory(item)
+            return # Ignore further command arguments
+    else:
+        print("You do not have that item!\n")
+
+def process_equip_remove_cmd(p, args):
+    equipment_items = p.get_equipment()
+
+    for item in equipment_items:
+        if args[0] in item.get_keywords():
+            print(f"You remove the {item.get_short_desc()}.")
+            p.add_item_to_inventory(item)
+            p.remove_item_from_equipment(item)
+            return # Ignore further command arguments
+    else:
+        print("You do not have that item equipped!\n")
 
 def process_drop_cmd(p, current_room, args):
     inventory_items = p.get_inventory()
@@ -105,11 +166,15 @@ def process_drop_cmd(p, current_room, args):
             print("You drop the {}.".format(item.get_short_desc()))
             inventory_items.remove(item)
             current_room.add_item(item)
-        else:
-            print("You can't drop that!")
-        return # Ignore further command arguments
+            return # Ignore further command arguments
     else:
-        print("You don't have any item with that name.")
+        print("You don't have that to drop!.\n")
+
+def display_help():
+    print("-----Available Commands----")
+    print("Directional: north, south, east, west")
+    print("World actions: get <arg>, drop <arg>, look <arg>")
+    print("Player actions: inventory, equipment, wear <arg>, remove <arg>, say <arg>\n")
 
 def display_room(room_id):
     if room_id in world_state:

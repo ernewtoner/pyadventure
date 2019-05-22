@@ -45,18 +45,35 @@ class Room:
     def remove_item(self, item_key):
         del self.items[item_key]
 
-
 class Player:
     def __init__(self, name, current_room):
         self.name = name
         self.current_room = current_room
         self.inventory = []
+        self.equipment = []
+
+    def copy(self, name, current_room, inventory, equipment):
+        self.name = name
+        self.current_room = current_room
+        self.inventory = inventory
+        self.equipment = equipment
+    
+    def __repr__(self):
+        return (
+            f"{WHITE}{self.name}{ENDC}\n"
+            f"Current Room: {self.current_room.get_id()}\n"
+            f"Inventory: {self.inventory}"
+            f"Equipment: {self.equipment}"
+        )
 
     def get_current_room_id(self):
         return self.current_room.get_id()
     
     def get_inventory(self):
         return self.inventory
+
+    def get_equipment(self):
+        return self.equipment
     
     # Returns true if move was successful, false if not
     def move(self, dir):
@@ -74,9 +91,25 @@ class Player:
         print("-----Inventory----")
         for item in self.inventory:
             print(item.get_short_desc())
+        print()
+
+    def display_equipment(self):
+        print("-----Equipment----")
+        for item in self.equipment:
+            print(item.get_short_desc())
+        print()
 
     def add_item_to_inventory(self, item):
         self.inventory.append(item)
+    
+    def remove_item_from_inventory(self, item):
+        self.inventory.remove(item)
+
+    def add_item_to_equipment(self, item):
+        self.equipment.append(item)
+    
+    def remove_item_from_equipment(self, item):
+        self.equipment.remove(item)
 
 
 class Item:

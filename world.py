@@ -1,6 +1,7 @@
 import json
+import pickle
 import os
-from world_state import * # world_state dictionary and constants
+from world_state import * # world_state and saved_world_state dictionaries and constants
 import classes
 
 def process_room_data(data):
@@ -72,10 +73,27 @@ def load_map_data():
                  # Add to world state
                 world_state[room_id] = room
 
-    #print("WORLD STATE")
-    #print(world_state)
-    #print("--------------------------------------------")
+def save_world_state(player):
+    #print("Player before dump")
+    #print(player)
+    with open('world/saved_world_state', 'wb') as world_state_file:
+        pickle.dump(world_state, world_state_file)
+    with open('world/saved_player_state', 'wb') as player_state_file:
+        pickle.dump(player, player_state_file)
 
+def load_world_state(player):
+    global world_state
+    with open('world/saved_world_state', 'rb') as world_state_file:
+        world_state = pickle.load(world_state_file)
+    with open('world/saved_player_state', 'rb') as player_state_file:
+        saved_player = pickle.load(player_state_file)
+
+    #print("New world state:")
+    #print(world_state)
+    #print("New player state:")
+    #print(saved_player)
+    return world_state, saved_player
+    
 def init_player(starting_room):
     """ Initializes player object """
     player = classes.Player("Ilswyn", starting_room)
