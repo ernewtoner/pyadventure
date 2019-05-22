@@ -1,5 +1,3 @@
-world_state = {}
-
 # Constants
 START_ROOM = 1
 NORTH = 'north'

@@ -42,7 +42,7 @@ def process_item_data(data):
         item = classes.Item(key_from_file, room_id, ground_desc, short_desc, long_desc, takeable, keywords)
         return item
 
-def load_item_data():
+def load_item_data(world):
     """ Loads data from JSON files in items directory and adds Item objects to world state"""
     with os.scandir('world/items/') as entries:
         for entry in entries:
@@ -56,9 +56,9 @@ def load_item_data():
                 item_room = item.get_room_id()
 
                 # Add to world state under a Room's items dictionary
-                world_state[item_room].items.update({item_key: item})
+                world.world_state[item_room].items.update({item_key: item})
 
-def load_map_data():
+def load_map_data(world):
     """ Loads data from JSON files in rooms directory and adds Room objects to world state"""
     with os.scandir('world/rooms/') as entries:
         for entry in entries:
@@ -71,29 +71,38 @@ def load_map_data():
                 room_id = room.get_id()
 
                  # Add to world state
-                world_state[room_id] = room
+                world.world_state[room_id] = room
 
-def save_world_state(player):
-    #print("Player before dump")
-    #print(player)
+def save_world_state(world, player):
+    print("Saving game state...\n")
     with open('world/saved_world_state', 'wb') as world_state_file:
-        pickle.dump(world_state, world_state_file)
+        pickle.dump(world.world_state, world_state_file)
     with open('world/saved_player_state', 'wb') as player_state_file:
         pickle.dump(player, player_state_file)
+    #print("Saved world state:")
+    #print(world.world_state)
+    #print("Saved player state:")
+    #rint(player)
 
 def load_world_state(player):
-    global world_state
+    os.system('cls||clear')
+    print("Loading game state...\n")
     with open('world/saved_world_state', 'rb') as world_state_file:
-        world_state = pickle.load(world_state_file)
+        saved_world_state = pickle.load(world_state_file)
     with open('world/saved_player_state', 'rb') as player_state_file:
         saved_player = pickle.load(player_state_file)
 
-    #print("New world state:")
+    #print("Saved world state:")
     #print(world_state)
-    #print("New player state:")
+    #print("Saved player state:")
     #print(saved_player)
-    return world_state, saved_player
-    
+    return saved_world_state, saved_player
+
+def init_world():
+    """ Initializes World object """
+    world = classes.World({})
+    return world
+
 def init_player(starting_room):
     """ Initializes player object """
     player = classes.Player("Ilswyn", starting_room)

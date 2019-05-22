@@ -1,5 +1,4 @@
 from colors import *
-from world_state import world_state
 from enum import Enum
 
 class direction(Enum):
@@ -7,6 +6,10 @@ class direction(Enum):
     south = 2   
     east = 3
     west = 4
+
+class World:
+    def __init__(self, world_state):
+        self.world_state = world_state # Dictionary in the form { room_id: Room object}
 
 # String helper function to split up items on seperate lines
 def unpack(items):
@@ -39,8 +42,7 @@ class Room:
         return self.items
 
     def add_item(self, item):
-        item_key = item.get_key()
-        self.items[item_key] = item
+        self.items[item.get_key()] = item
 
     def remove_item(self, item_key):
         del self.items[item_key]
@@ -76,12 +78,12 @@ class Player:
         return self.equipment
     
     # Returns true if move was successful, false if not
-    def move(self, dir):
+    def move(self, world, dir):
         current_room_exits = self.current_room.get_exits()
 
         if dir.name in current_room_exits:
             new_room_id = current_room_exits[dir.name][0]
-            self.current_room = world_state[new_room_id]
+            self.current_room = world.world_state[new_room_id]
             return True
         else:
             print("You can't go that direction!")

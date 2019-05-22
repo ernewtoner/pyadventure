@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os
 from world_state import * # world_state dictionary and constants
-from world import init_player, load_map_data, load_item_data, save_world_state, load_world_state
+from world import init_player, init_world, load_map_data, load_item_data, save_world_state, load_world_state
 from classes import Player, direction
 from colors import *
 
@@ -11,20 +11,23 @@ os.system('cls||clear')
 def play():
     print("Escape from Cave Terror!\n")
 
+    # Initialize a world
+    w = init_world()
+
     # Load rooms into world state
-    load_map_data()
-    load_item_data()
+    load_map_data(w)
+    load_item_data(w)
 
     # Init player with starting Room
-    p = init_player(world_state[START_ROOM])
+    p = init_player(w.world_state[START_ROOM])
 
     # Display the starting Room
-    display_room(START_ROOM)
+    display_room(w, START_ROOM)
 
     while True:
         action_input = get_player_command()
         current_room_id = p.get_current_room_id()
-        current_room = world_state[current_room_id]
+        current_room = w.world_state[current_room_id]
 
         # Transform to lowercase to standardize
         action_input = action_input.lower() 
@@ -33,7 +36,7 @@ def play():
         cmd = action_input.split()
 
         if len(cmd) == 1:
-            process_standalone_cmd(p, cmd[0])
+            process_standalone_cmd(p, w, cmd[0])
         elif len(cmd) == 0: # No input
             continue
         elif len(cmd) > 1 and cmd[0] in ('l', 'look') and cmd[1] in ('at', 'in'):
@@ -55,18 +58,17 @@ def play():
         else:
             print("Invalid action!\n")
 
-def process_standalone_cmd(p, action_input):
-    global world_state
+def process_standalone_cmd(p, w, action_input):
     update_room_display = False
 
     if action_input in ('n', 'north'):
-        update_room_display = p.move(direction.north)
+        update_room_display = p.move(w, direction.north)
     elif action_input in ('s', 'south'):
-        update_room_display = p.move(direction.south)
+        update_room_display = p.move(w, direction.south)
     elif action_input in ('e', 'east'):
-        update_room_display = p.move(direction.east)
+        update_room_display = p.move(w, direction.east)
     elif action_input in ('w', 'west'):
-        update_room_display = p.move(direction.west)
+        update_room_display = p.move(w, direction.west)
     elif action_input in ('l', 'look'):
         update_room_display = True
     elif action_input in ('g', 'get'):
@@ -82,13 +84,13 @@ def process_standalone_cmd(p, action_input):
     elif action_input in ('eq', 'equip', 'equipment'):
         p.display_equipment()
     elif action_input in ('save', 'savegame'):
-        save_world_state(p)
+        save_world_state(w, p)
     elif action_input in ('load', 'loadgame'):
-        world_state, saved_player = load_world_state(p)
+        w.world_state, saved_player = load_world_state(p)
         p.copy(saved_player.name, saved_player.current_room, saved_player.inventory, saved_player.equipment)
         update_room_display = True
-        #print("new player within game")
-        #print(p)
+        print("new player within game")
+        print(p)
     elif action_input in ('h', 'help'):
         display_help()
     elif action_input in ('q', 'quit'):
@@ -98,7 +100,7 @@ def process_standalone_cmd(p, action_input):
 
     # If the player moved rooms or entered 'look' action re-display room
     if update_room_display:
-        display_room(p.get_current_room_id())
+        display_room(w, p.get_current_room_id())
 
 def process_look_cmd(p, current_room, args):
     current_room_items = current_room.get_items()
@@ -164,8 +166,8 @@ def process_drop_cmd(p, current_room, args):
     for item in inventory_items:
         if args[0] in item.get_keywords():
             print("You drop the {}.".format(item.get_short_desc()))
-            inventory_items.remove(item)
             current_room.add_item(item)
+            p.remove_item_from_inventory(item)
             return # Ignore further command arguments
     else:
         print("You don't have that to drop!.\n")
@@ -176,9 +178,9 @@ def display_help():
     print("World actions: get <arg>, drop <arg>, look <arg>")
     print("Player actions: inventory, equipment, wear <arg>, remove <arg>, say <arg>\n")
 
-def display_room(room_id):
-    if room_id in world_state:
-        print(world_state[room_id])
+def display_room(w, room_id):
+    if room_id in w.world_state:
+        print(w.world_state[room_id])
     else:
         print("Room does not exist!")
 
