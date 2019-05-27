@@ -1,3 +1,4 @@
+import time
 from colors import *
 from enum import Enum
 
@@ -18,13 +19,14 @@ def unpack(items):
 
 class Room:
     """ A single room's attributes """
-    def __init__(self, id, name, long_desc, short_desc, exits, items):
+    def __init__(self, id, name, long_desc, short_desc, exits, items, npcs):
         self.id = id
         self.name = name
         self.long_desc = long_desc
         self.short_desc = short_desc
         self.exits = exits # Dictionary of exits in the format {'north' : (room_id, "Room Name") } 
         self.items = items # Dictionary of Objects in {'key': Object} form
+        self.npcs = npcs
 
     def display(self, display_long_desc):
         if display_long_desc:
@@ -35,9 +37,13 @@ class Room:
         print (
             f"{WHITE}{self.name}{ENDC}\n"
             f"{desc}\n" 
-            f"Exits: [ {str(*self.exits)} ]\n"
-            f"{unpack(self.items.values())}"
+            f"Exits: [ {str(*self.exits)} ]"
         )
+
+        if len(self.npcs) > 0:
+            print(f"{unpack(self.npcs.values())}")
+        
+        print (f"{unpack(self.items.values())}")
 
     def get_id(self): 
         return self.id
@@ -47,6 +53,9 @@ class Room:
 
     def get_items(self):
         return self.items
+
+    def get_npcs(self):
+        return self.npcs
 
     def add_item(self, item):
         self.items[item.get_key()] = item
@@ -102,6 +111,15 @@ class Player:
             print("You can't go that direction!")
             return False, False
 
+    def death(self):
+        print("You are in excrutiating pain from your injuries!")
+        time.sleep(2)
+        print("You feel critically weak!")
+        time.sleep(2)
+        print("You have died.")
+        exit()
+
+
     def display_inventory(self):
         print("-----Inventory----")
         for item in self.inventory:
@@ -128,13 +146,17 @@ class Player:
 
 
 class Object:
-    def __init__(self, key, room_id, ground_desc, short_desc, long_desc, takeable, keywords):
+    def __init__(self, key, room_id, ground_desc, short_desc, long_desc, drink_desc, eat_desc, takeable, equipable, npc, keywords):
         self.key = key # The key is the unique identifier defined in the item's JSON file
         self.room_id = room_id # Room item is stored in (0 for inventory)
         self.ground_desc = ground_desc
         self.short_desc = short_desc
         self.long_desc = long_desc
+        self.drink_desc = drink_desc
+        self.eat_desc = eat_desc
         self.takeable = takeable # Either a 1 or 0
+        self.equipable = equipable
+        self.npc = npc # Is non-player character?
         self.keywords = keywords
     
     def get_key(self):
@@ -156,4 +178,7 @@ class Object:
         return self.takeable
 
     def display(self):
-        return f"{LCYAN}{self.ground_desc}{ENDC}"
+        if not self.npc:
+            return f"{LCYAN}{self.ground_desc}{ENDC}"
+        else:
+            return f"{CYAN}{self.ground_desc}{ENDC}"

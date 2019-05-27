@@ -1,10 +1,13 @@
 {
     "Fountain": {
         "ROOM_ID": 1,
-        "GROUNDDESC": "A magnificent fountain is at the center of the square.",
+        "GROUNDDESC": "A magnificent fountain has a basin filled with blue-tinted water.",
         "SHORTDESC": "a fountain",
         "LONGDESC": "The water in the fountain - long description",
+        "DRINKDESC": "You lap up some cool water from the fountain, it has a slighty grimy aftertaste. Something seems strange about it.",
+        "EATDESC": "There isn't really a way to eat that.",
         "TAKEABLE": 0,
-        "KEYWORDS": ["fountain"]
+        "EQUIPABLE": 0,
+        "KEYWORDS": ["basin", "fou", "fount",  "fountain"]
     }
 }

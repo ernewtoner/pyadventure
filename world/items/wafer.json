@@ -1,0 +1,12 @@
+{
+    "Wafer": {
+        "ROOM_ID": 1,
+        "GROUNDDESC": "A magical wafer is here.",
+        "SHORTDESC": "a wafer",
+        "LONGDESC": "A magical wafer sure to provide nourishment.",
+        "EATDESC": "You eat the magical wafer and feel as though you'll never have to eat again.",
+        "TAKEABLE": 1,
+        "EQUIPABLE": 0,
+        "KEYWORDS": ["waf", "wafer"]
+    }
+}

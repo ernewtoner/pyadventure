@@ -1,0 +1,12 @@
+{
+    "Tired Mage": {
+        "ROOM_ID": 1,
+        "GROUNDDESC": "A tired mage stands here.",
+        "SHORTDESC": "a tired mage",
+        "LONGDESC": "The man has a formidable precense even in his fatigue.",
+        "NPC": 1,
+        "TAKEABLE": 0,
+        "EQUIPABLE": 0,
+        "KEYWORDS": ["tired", "tir", "mage", "mag", "ma"]
+    }
+}

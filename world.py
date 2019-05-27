@@ -23,10 +23,11 @@ def process_room_data(data):
         if "WEST" in subdict:
             exits[WEST] = (subdict["WEST"][0], subdict["WEST"][1])
 
-        # Dictionary of Items to be populated when item files are processed
+        # Dictionary of Items and NPCs (non-player characters) to be populated when item files are processed
         items = {}
+        npcs = {}
 
-        room = classes.Room(id, name, long_desc, short_desc, exits, items)
+        room = classes.Room(id, name, long_desc, short_desc, exits, items, npcs)
         return room
 
 def process_item_data(data):
@@ -37,10 +38,21 @@ def process_item_data(data):
         ground_desc = subdict["GROUNDDESC"]
         short_desc = subdict["SHORTDESC"]
         long_desc = subdict["LONGDESC"]
+        drink_desc = "You can't drink from that!" # Default description
+        if subdict.get("DRINKDESC"):
+            drink_desc = subdict["DRINKDESC"] # If specified
+        eat_desc = "You can't eat that!"
+        if subdict.get("EATDESC"):
+            eat_desc = subdict["EATDESC"]
         takeable = subdict["TAKEABLE"]
+        equipable = subdict["EQUIPABLE"]
         keywords = subdict["KEYWORDS"]
+        npc = 0
+        if subdict.get("NPC"):
+            npc = 1
 
-        item = classes.Object(key_from_file, room_id, ground_desc, short_desc, long_desc, takeable, keywords)
+
+        item = classes.Object(key_from_file, room_id, ground_desc, short_desc, long_desc, drink_desc, eat_desc, takeable, equipable, npc, keywords)
         return item
 
 def load_item_data(world):
@@ -57,7 +69,10 @@ def load_item_data(world):
                 item_room = item.get_room_id()
 
                 # Add to world state under a Room's items dictionary
-                world.world_state[item_room].items.update({item_key: item})
+                if item.npc:
+                    world.world_state[item_room].npcs.update({item_key: item})
+                else:
+                    world.world_state[item_room].items.update({item_key: item})
 
 def load_map_data(world):
     """ Loads data from JSON files in rooms directory and adds Room objects to world state"""

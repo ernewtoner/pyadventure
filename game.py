@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import os
+import os, time
 from world_state import * # world_state dictionary and constants
 from world import init_player, init_world, load_map_data, load_item_data, save_world_state, load_world_state
 from classes import Player, direction
@@ -40,9 +40,9 @@ def play():
         elif len(cmd) == 0: # No input
             continue
         elif len(cmd) > 1 and cmd[0] in ('l', 'look') and cmd[1] in ('at', 'in'):
-            process_look_cmd(p, current_room, cmd[2:])
+            process_cmd_with_arg(p, current_room, cmd[2:], "look at")
         elif len(cmd) > 1 and cmd[0] in ('l', 'look'):
-            process_look_cmd(p, current_room, cmd[1:])
+            process_cmd_with_arg(p, current_room, cmd[1:], "look at")
         elif len(cmd) > 1 and cmd[0] in ('t', 'take', 'get'):
             process_get_cmd(p, current_room, cmd[1:])
         elif len(cmd) > 1 and cmd[0] == 'pick' and cmd[1] == 'up':
@@ -51,10 +51,14 @@ def play():
             process_equip_cmd(p, cmd[1:])
         elif len(cmd) > 1 and cmd[0] in ('remove', 'unequip'):
             process_equip_remove_cmd(p, cmd[1:])       
-        elif len(cmd) > 1 and cmd[0] in ('d', 'drop'):
+        elif len(cmd) > 1 and cmd[0] in ('dr', 'drop'):
             process_drop_cmd(p, current_room, cmd[1:])
         elif len(cmd) > 1 and cmd[0] in ('sa', 'say'):
             print(f"{WHITE}You say, '{' '.join(cmd[1:])}'{ENDC}") # converts to lowercase
+        elif len(cmd) > 1 and cmd[0] in ('d', 'drink'):
+            process_cmd_with_arg(p, current_room, cmd[1:], "drink")
+        elif len(cmd) > 1 and cmd[0] in ('ea', 'eat'):
+            process_cmd_with_arg(p, current_room, cmd[1:], "eat")
         else:
             print("Invalid action!\n")
 
@@ -102,23 +106,70 @@ def process_standalone_cmd(p, w, action_input):
     if update_room_display:
         display_room(w, p.get_current_room_id(), display_long_desc)
 
-def process_look_cmd(p, current_room, args):
+# Searches for an item keyword in the room, inventory, and equipment
+# Returns Object with the matching keyword if found
+def find_item(p, current_room, item_keyword):
     current_room_items = current_room.get_items()
+    current_room_npcs = current_room.get_npcs()
     inventory_items = p.get_inventory()
+    equipped_items = p.get_equipment()
 
-    # For the Items in the current room, check if the first arg of the command matches any of the Item's keywords
+    # Search the Objects and NPCs in the room first
     for item in current_room_items.values():
-        if args[0] in item.get_keywords():
-            print(item.get_long_desc())
-            return # Ignore further command arguments
+        if item_keyword in item.get_keywords():
+            return item
+
+    for item in current_room_npcs.values():
+        if item_keyword in item.get_keywords():
+            return item
 
     # If not in room items, check the player's inventory items
     for item in inventory_items:
-        if args[0] in item.get_keywords():
-            print(item.get_long_desc())
-            return # Ignore further command arguments
+        if item_keyword in item.get_keywords():
+            return item
+
+    # Lastly check the player's equipped items
+    for item in equipped_items:
+        if item_keyword in item.get_keywords():
+            return item
     else:
-        print("There isn't an item with that name here!\n")
+        print("There is no item with that name!\n")
+        return None
+
+def process_look_at_cmd(p, current_room, args):
+    item = find_item(p, current_room, args[0])
+
+    # If item is found, print long description
+    if (item):
+        print(item.get_long_desc())
+    else:
+        print("There's no item with that name!\n")
+
+def process_cmd_with_arg(p, current_room, args, action):
+    """ Look at <arg>, drink <arg>, eat <arg> """
+    item = find_item(p, current_room, args[0])
+
+    # If item is found, process action
+    if (item):
+        if action == "look at":
+            print(item.long_desc)
+        elif action == 'drink':
+            print(item.drink_desc)
+            if item in p.inventory:
+                p.remove_item_from_inventory(item)
+        elif action == 'eat':
+            if item in p.inventory:
+                if item.key == "Dagger":
+                    print(item.eat_desc)
+                    time.sleep(1)
+                    p.death()
+                    return
+                print(item.eat_desc)
+                p.remove_item_from_inventory(item)
+            elif item.key in current_room.items:
+                print("You don't have that in your inventory!\n")
+        else:
+            print("Action not found!\n")
 
 def process_get_cmd(p, current_room, args):
     current_room_items = current_room.get_items()
@@ -141,10 +192,14 @@ def process_equip_cmd(p, args):
 
     for item in inventory_items:
         if args[0] in item.get_keywords():
-            print(f"You equip the {item.get_short_desc()}.\n")
-            p.add_item_to_equipment(item)
-            p.remove_item_from_inventory(item)
-            return # Ignore further command arguments
+            if item.equipable:
+                print(f"You equip the {item.get_short_desc()}.\n")
+                p.add_item_to_equipment(item)
+                p.remove_item_from_inventory(item)
+                return # Ignore further command arguments
+            else:
+                print("You cannot equip that item!\n")
+                return
     else:
         print("You do not have that item!\n")
 

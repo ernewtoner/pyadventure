@@ -4,7 +4,9 @@
         "GROUNDDESC": "A dagger lies on the ground here.",
         "SHORTDESC": "dagger",
         "LONGDESC": "Polished and sharp and somehow left behind.",
+        "EATDESC": "This is not going to go well..\nYou attempt to eat the dagger.\n",
         "TAKEABLE": 1,
+        "EQUIPABLE": 1,
         "KEYWORDS": ["dagger", "dag"]
     }
 }

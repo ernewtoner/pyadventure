@@ -1,6 +1,7 @@
 LCYAN = '\033[96m'
+CYAN = '\033[1;34m'
 WHITE = '\u001b[231;1m'
-ENDC = '\033[0m'
+ENDC = '\u001b[0m'
 
 def print_format_table(): 
     """ 
