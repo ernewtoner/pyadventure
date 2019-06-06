@@ -1,0 +1,10 @@
+{
+    "Plants": {
+        "ROOM_ID": 5,
+        "SHORTDESC": "plants",
+        "LONGDESC": "A few scrubby weeds are on either side of the rockface, oddly they seem to have a blue tinge to them.",
+        "GROUNDDESC": "",
+        "HIDDEN": 1,
+        "KEYWORDS": ["pla", "plant", "plants"]
+    }
+}

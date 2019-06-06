@@ -1,0 +1,10 @@
+{
+    "Bookshelves": {
+        "ROOM_ID": 7,
+        "SHORTDESC": "bookshelves",
+        "LONGDESC": "The entire room is lined with bookshelves filled with all sort of thick leather-bound book.",
+        "GROUNDDESC": "",
+        "HIDDEN": 1,
+        "KEYWORDS": ["book", "books", "tome", "tomes", "study", "bookshelves"]
+    }
+}

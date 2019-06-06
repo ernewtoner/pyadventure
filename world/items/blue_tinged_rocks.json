@@ -1,0 +1,10 @@
+{
+    "Rocks": {
+        "ROOM_ID": 5,
+        "SHORTDESC": "rocks",
+        "LONGDESC": "A few small rocks are scattered about, oddly they seem to have a blue tinge to them.",
+        "GROUNDDESC": "",
+        "HIDDEN": 1,
+        "KEYWORDS": ["ro", "rock", "rocks"]
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "Approaching a Dark Citadel": {
+        "ID": 4,
+        "LONGDESC": "Suddenly there is rock face all around you and a gothic citadel can be seen in the distance, up a significant grade to the north.",
+        "SHORTDESC": "The path leads only to the citadel or back to the plains.",
+        "NORTH": [5, "The Path to the Citadel"],
+        "SOUTH": [2, "A Barren Plain"]
+    }
+}

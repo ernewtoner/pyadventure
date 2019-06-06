@@ -1,8 +1,0 @@
-{
-    "North Y Street": {
-        "ID": 2,
-        "LONGDESC": "The northern end of Y Street has really gone down hill. Pot holes are everywhere, as are stray cats, rats, and wombats.",
-        "SHORTDESC": "North Y Street.",
-        "SOUTH": [1, "Town Square"]
-    }
-}

@@ -1,0 +1,10 @@
+{
+    "Brown Grass": {
+        "ROOM_ID": 3,
+        "SHORTDESC": "brown grass",
+        "LONGDESC": "The grass is a plain brown color, not quite alive but not quite dead.",
+        "GROUNDDESC": "",
+        "HIDDEN": 1,
+        "KEYWORDS": ["brow", "brown", "gra", "grass"]
+    }
+}

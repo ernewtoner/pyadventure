@@ -1,0 +1,8 @@
+{
+    "Inside the Citadel": {
+        "ID": 6,
+        "LONGDESC": "You find yourself suddenly within the citadel, not remembering entering or having to approach any set of doors. The interior itself is quite featureless, tall stone walls surround you in a circular room. There is one small set of doors to the east.",
+        "SHORTDESC": "The plain hall is before you.",
+        "SOUTH": [5, "The Path to the Citadel"]
+    }
+}

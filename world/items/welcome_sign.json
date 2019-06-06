@@ -1,9 +1,9 @@
 {
     "Welcome Sign": {
-        "ROOM_ID": 1,
+        "ROOM_ID": 0,
         "GROUNDDESC": "A Welcome Sign is planted in the ground here.",
         "SHORTDESC": "a Welcome Sign",
-        "LONGDESC": "Welcome to Escape from Cave Terror!\nType 'help' for a list of commands\n",
+        "LONGDESC": "Welcome to Escape from the Astral Plane!\nType 'help' for a list of commands\n",
         "TAKEABLE": 0,
         "EQUIPABLE": 0,
         "KEYWORDS": ["sign", "welcome", "welcome sign"]

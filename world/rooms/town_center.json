@@ -1,8 +1,0 @@
-{
-    "Town Square": {
-        "ID": 1,
-        "LONGDESC": "The town square is a large open space with a fountain in the center. Streets lead in all directions.",
-        "SHORTDESC": "The town square.",
-        "NORTH": [2, "North Y Street"]
-    }
-}

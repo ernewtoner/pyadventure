@@ -1,0 +1,8 @@
+{
+    "The Edge of a Cliff Face": {
+        "ID": 1,
+        "LONGDESC": "You're close to a very, very long drop down. A raging ocean looks unforgiving beyond the cliff. To the north is what looks like a very large expanse of plains.",
+        "SHORTDESC": "The edge looms there ominously.",
+        "NORTH": [2, "A Barren Plain"]
+    }
+}

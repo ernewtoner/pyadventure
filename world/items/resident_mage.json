@@ -1,0 +1,14 @@
+{
+    "Resident Mage": {
+        "ROOM_ID": 7,
+        "GROUNDDESC": "The resident mage is here looking at you intently.",
+        "SHORTDESC": "the resident mage",
+        "LONGDESC": "He seems to have been waiting for you.",
+        "HITDESC": "You attack the resident mage.",
+        "TALKDESC": "A resident mage smirks at you.",
+        "NPC": 1,
+        "TAKEABLE": 0,
+        "EQUIPABLE": 0,
+        "KEYWORDS": ["res", "resident", "mage", "mag", "ma"]
+    }
+}

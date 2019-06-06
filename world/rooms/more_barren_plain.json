@@ -1,0 +1,11 @@
+{
+    "More Barren Plain": {
+        "ID": 3,
+        "LONGDESC": "The only features continue to be plain brown grass, the occasional rock and a few scrubby trees. You can see something far off in the distance to the north, each other direction is more of the plain as far as the eye can see.",
+        "SHORTDESC": "It continues just as it has been.",
+        "NORTH": [3, "More Barren Plain"],
+        "SOUTH": [2, "A Barren Plain"],
+        "EAST": [3, "More Barren Plain"],
+        "WEST": [3, "More Barren Plain"]
+    }
+}

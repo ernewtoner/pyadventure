@@ -1,0 +1,10 @@
+{
+    "Rock": {
+        "ROOM_ID": 4,
+        "SHORTDESC": "rockface",
+        "LONGDESC": "Rock face surrounds you on all sides, it looks as if this path was carved out of a hill.",
+        "GROUNDDESC": "",
+        "HIDDEN": 1,
+        "KEYWORDS": ["ro", "rock", "rockf", "rockface"]
+    }
+}

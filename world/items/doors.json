@@ -1,0 +1,12 @@
+{
+    "Doors": {
+        "ROOM_ID": 6,
+        "SHORTDESC": "doors",
+        "LONGDESC": "The plain wooden doors are a dark brown color. They are closed.",
+        "GROUNDDESC": "",
+        "OPENDESC": "You open the doors.",
+        "OPENABLE": 1,
+        "HIDDEN": 1,
+        "KEYWORDS": ["door", "doors"]
+    }
+}

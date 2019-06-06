@@ -1,5 +1,5 @@
 # Constants
-START_ROOM = 1
+START_ROOM = 0
 NORTH = 'north'
 SOUTH = 'south'
 EAST = 'east'

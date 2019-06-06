@@ -1,0 +1,10 @@
+{
+    "Odd Items": {
+        "ROOM_ID": 7,
+        "SHORTDESC": "odd items",
+        "LONGDESC": "You can't even tell what these items are, some of them look to be instruments of some sort but nothing you are familiar with.",
+        "GROUNDDESC": "",
+        "HIDDEN": 1,
+        "KEYWORDS": ["odd", "item", "items"]
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "Interior": {
+        "ROOM_ID": 6,
+        "SHORTDESC": "interior",
+        "LONGDESC": "The interior is extremely barren, the ceilings are high but you can't distinguish any real features. There are no objects in this room, only one set of doors to the east.",
+        "GROUNDDESC": "",
+        "HIDDEN": 1,
+        "KEYWORDS": ["cit", "cita", "citadel", "int", "inter", "interior"]
+    }
+}

@@ -1,9 +1,11 @@
 {
     "Tired Mage": {
         "ROOM_ID": 1,
-        "GROUNDDESC": "A tired mage stands here.",
+        "GROUNDDESC": "A tired mage leans against the air adjacent to the cliff edge.",
         "SHORTDESC": "a tired mage",
         "LONGDESC": "The man has a formidable precense even in his fatigue.",
+        "HITDESC": "You attack the tired mage.",
+        "TALKDESC": "A tired mage says nothing.",
         "NPC": 1,
         "TAKEABLE": 0,
         "EQUIPABLE": 0,

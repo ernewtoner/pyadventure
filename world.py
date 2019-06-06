@@ -39,20 +39,40 @@ def process_item_data(data):
         short_desc = subdict["SHORTDESC"]
         long_desc = subdict["LONGDESC"]
         drink_desc = "You can't drink from that!" # Default description
+        hit_desc = "You can't hit that!"
         if subdict.get("DRINKDESC"):
             drink_desc = subdict["DRINKDESC"] # If specified
         eat_desc = "You can't eat that!"
         if subdict.get("EATDESC"):
             eat_desc = subdict["EATDESC"]
-        takeable = subdict["TAKEABLE"]
-        equipable = subdict["EQUIPABLE"]
+        if subdict.get("HITDESC"):
+            hit_desc = subdict["HITDESC"]
+        talk_desc = "You can't talk to that!"
+        if subdict.get("TALKDESC"):
+            talk_desc = subdict["TALKDESC"]
+        takeable = subdict.get("TAKEABLE")
+        equipable = subdict.get("EQUIPABLE")
+        enterable = 0
+        openable = 0
+        destination = None
+        if subdict.get("ENTERABLE"):
+            enterable = subdict["ENTERABLE"]
+        if subdict.get("DESTINATION"):
+            destination = subdict["DESTINATION"]
+        openable = 0
+        open_desc = "You can't open that!"
+        if subdict.get("OPENABLE"):
+            openable = 1
+            open_desc = subdict["OPENDESC"]
         keywords = subdict["KEYWORDS"]
         npc = 0
         if subdict.get("NPC"):
             npc = 1
+        hidden = 0
+        if subdict.get("HIDDEN"):
+            hidden = 1
 
-
-        item = classes.Object(key_from_file, room_id, ground_desc, short_desc, long_desc, drink_desc, eat_desc, takeable, equipable, npc, keywords)
+        item = classes.Object(key_from_file, room_id, ground_desc, short_desc, long_desc, drink_desc, eat_desc, hit_desc, open_desc, talk_desc, takeable, equipable, enterable, openable, destination, npc, hidden, keywords)
         return item
 
 def load_item_data(world):

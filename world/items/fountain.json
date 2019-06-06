@@ -6,6 +6,7 @@
         "LONGDESC": "The water in the fountain - long description",
         "DRINKDESC": "You lap up some cool water from the fountain, it has a slighty grimy aftertaste. Something seems strange about it.",
         "EATDESC": "There isn't really a way to eat that.",
+        "ENTERABLE": 1,
         "TAKEABLE": 0,
         "EQUIPABLE": 0,
         "KEYWORDS": ["basin", "fou", "fount",  "fountain"]
