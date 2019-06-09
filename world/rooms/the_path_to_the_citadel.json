@@ -1,8 +1,8 @@
 {
     "The Path to the Citadel": {
         "ID": 5,
-        "LONGDESC": "You continue to climb the grade leading to the citadel. A collection of small plants and rocks line the path. You hear nothing, no sign of animals or any other life.",
-        "SHORTDESC": "The path continues to the citadel.",
+        "LONGDESC": "You continue to climb the grade leading to the citadel. A collection of small plants and rocks line the path. You hear nothing, no sign of animals or any other life. To the north is more path, to the south the beginning of it",
+        "SHORTDESC": "The path continues to the citadel to the north, to the south it begins.",
         "NORTH": [6, "Inside the Citadel"],
         "SOUTH": [4, "Approaching a Dark Citadel"]
     }

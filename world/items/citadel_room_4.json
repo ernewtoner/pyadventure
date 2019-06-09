@@ -1,7 +1,7 @@
 {
     "Citadel": {
         "ROOM_ID": 4,
-        "SHORTDESC": "citadel",
+        "SHORTDESC": "the citadel",
         "LONGDESC": "You're now close enough to see the dark stone face of the citadel. The stone is a dark gray color, the structure has a large circular base with a tower extending out of it at least three times the height of the base.",
         "GROUNDDESC": "",
         "HIDDEN": 1,

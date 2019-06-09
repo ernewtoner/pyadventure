@@ -1,10 +1,10 @@
 {
     "Tree": {
-        "ROOM_ID": 3,
-        "SHORTDESC": "occasional tree",
+        "ROOM_ID": 2,
+        "SHORTDESC": "an occasional tree",
         "LONGDESC": "An unremarkable scrubby tree, not much for shade.",
         "GROUNDDESC": "",
         "HIDDEN": 1,
-        "KEYWORDS": ["tre", "tree", "occ"]
+        "KEYWORDS": ["tre", "tree", "trees", "occ"]
     }
 }

@@ -5,4 +5,4 @@ SOUTH = 'south'
 EAST = 'east'
 WEST = 'west'
 
-SCREEN_WIDTH = 80
+#SCREEN_WIDTH = 80

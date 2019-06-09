@@ -83,8 +83,8 @@ class Player:
         self.inventory = []
         self.equipment = []
         self.counter = 0 # Counter for calculating plain rooms
-        self.fountain_trigger = 0 # Trigger if the player has bathed in the fountain
-        self.endgame_trigger = 0 # Trigger if player has bathed in the fountain and eats the magical wafer
+        self.fountain_trigger = 0 # Trigger if the player has bathed in the fountain or soaked the wafer in the fountain
+        self.endgame_trigger = 0 # Trigger if player has triggered above and eats the magical wafer
 
     def copy(self, name, current_room, inventory, equipment):
         self.name = name
@@ -134,7 +134,7 @@ class Player:
             if new_room_id == 3 and dir.name == 'north':
                 self.counter += 1
             
-            if self.counter >= 5:
+            if self.counter >= 10:
                 new_room_id = 4 # Escaping the plains
                 display_long_desc = self.set_current_room(world, new_room_id)
                 self.counter = 0
@@ -186,7 +186,7 @@ class Player:
 
 class Object:
     def __init__(self, key, room_id, ground_desc, short_desc, long_desc, drink_desc, eat_desc, hit_desc, open_desc, talk_desc, 
-                 takeable, equipable, enterable, openable, destination, npc, hidden, keywords):
+                 takeable, equipable, enterable, openable, locked, destination, npc, hidden, keywords):
         self.key = key # The key is the unique identifier defined in the item's JSON file
         self.room_id = room_id # Room item is stored in (0 for inventory)
         self.ground_desc = ground_desc
@@ -201,6 +201,7 @@ class Object:
         self.equipable = equipable
         self.enterable = enterable
         self.openable = openable
+        self.locked = locked
         self.destination = destination
         self.npc = npc # Is non-player character?
         self.hidden = hidden # Is object hidden?

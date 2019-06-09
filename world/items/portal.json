@@ -4,6 +4,7 @@
         "GROUNDDESC": "A shimmering portal is here.",
         "SHORTDESC": "a shimmering portal",
         "LONGDESC": "A semi-translucent portal stands at the ready. You have no idea where it leads or where you even are right now. There doesn't appear to be any exit to this room, despite how much you may walk in one direction the room seems static. The portal remains in the same place and the dimensions of the room remain the same.",
+        "EATDESC": "You attempt to stick your mouth in the portal and get some of it but nothing seems to happen.",
         "ENTERABLE": 1,
         "DESTINATION": 1,
         "TAKEABLE": 0,

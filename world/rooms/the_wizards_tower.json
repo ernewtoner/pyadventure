@@ -1,8 +1,8 @@
 {
     "The Wizard's Tower": {
         "ID": 7,
-        "LONGDESC": "This seems to be the main room of study for the resident mage. Thick tomes and bookshelves line the room and odd items are strewn about",
-        "SHORTDESC": "The plain hall is before you.",
+        "LONGDESC": "This seems to be the main room of study for the resident mage. Thick tomes and bookshelves line the room and odd items are strewn about. The only exit is the small doors you entered from to the west.",
+        "SHORTDESC": "The mage's study is before you, the only exit being the doors to the west.",
         "WEST": [6, "Inside the Citadel"]
     }
 }

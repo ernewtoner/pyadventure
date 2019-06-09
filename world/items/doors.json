@@ -5,6 +5,7 @@
         "LONGDESC": "The plain wooden doors are a dark brown color. They are closed.",
         "GROUNDDESC": "",
         "OPENDESC": "You open the doors.",
+        "LOCKED": 1,
         "OPENABLE": 1,
         "HIDDEN": 1,
         "KEYWORDS": ["door", "doors"]

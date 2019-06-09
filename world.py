@@ -1,7 +1,7 @@
 import json
 import pickle
 import os
-from world_state import * # world_state and saved_world_state dictionaries and constants
+from world_state import * # constants
 import classes
 
 def process_room_data(data):
@@ -60,10 +60,14 @@ def process_item_data(data):
         if subdict.get("DESTINATION"):
             destination = subdict["DESTINATION"]
         openable = 0
+        locked = 0
         open_desc = "You can't open that!"
         if subdict.get("OPENABLE"):
             openable = 1
             open_desc = subdict["OPENDESC"]
+            if subdict.get("LOCKED"):
+                locked = 1
+
         keywords = subdict["KEYWORDS"]
         npc = 0
         if subdict.get("NPC"):
@@ -72,7 +76,7 @@ def process_item_data(data):
         if subdict.get("HIDDEN"):
             hidden = 1
 
-        item = classes.Object(key_from_file, room_id, ground_desc, short_desc, long_desc, drink_desc, eat_desc, hit_desc, open_desc, talk_desc, takeable, equipable, enterable, openable, destination, npc, hidden, keywords)
+        item = classes.Object(key_from_file, room_id, ground_desc, short_desc, long_desc, drink_desc, eat_desc, hit_desc, open_desc, talk_desc, takeable, equipable, enterable, openable, locked, destination, npc, hidden, keywords)
         return item
 
 def load_item_data(world):

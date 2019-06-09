@@ -1,7 +1,7 @@
 {
     "Rock": {
         "ROOM_ID": 4,
-        "SHORTDESC": "rockface",
+        "SHORTDESC": "the rockface",
         "LONGDESC": "Rock face surrounds you on all sides, it looks as if this path was carved out of a hill.",
         "GROUNDDESC": "",
         "HIDDEN": 1,

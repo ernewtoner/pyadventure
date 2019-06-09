@@ -1,7 +1,7 @@
 {
     "Eternal Void": {
         "ID": 0,
-        "LONGDESC": "You stand in what appears to be a room but with no discernable shape. The room is filled with bright white light. The light is blinding yet comforting. A cool breeze seems to always inhabit this place. The complete calmness of it beckons you to stay a while.",
-        "SHORTDESC": "The eternal void."
+        "LONGDESC": "You stand in what appears to be a room but with no discernable shape. The room is filled with bright white light. The light is blinding yet comforting. A cool breeze seems to always inhabit this place. The complete calmness of it beckons you to stay a while. There are no exits here.",
+        "SHORTDESC": "The eternal void, a shapeless room with no exits."
     }
 }

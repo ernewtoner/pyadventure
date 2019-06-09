@@ -35,6 +35,28 @@ def play():
         # Split string to see if there are multiple arguments
         cmd = action_input.split()
 
+        # Handle 'get in' aka 'enter' case
+        if len(cmd) >= 3 and cmd[0] == 'get' and cmd[1] == 'in':
+            process_cmd_with_arg(p, w, current_room, cmd[2:], "enter")
+            continue
+
+        # Remove prepositions
+        in_count = cmd.count('in')
+        on_count = cmd.count('on')
+        with_count = cmd.count('with')
+
+        while in_count:
+            cmd.remove('in')
+            in_count -= 1
+
+        while on_count:    
+            cmd.remove('on')
+            on_count -= 1
+
+        while with_count:
+            cmd.remove('with')
+            with_count -= 1
+
         if len(cmd) == 1:
             process_standalone_cmd(p, w, cmd[0])
         elif len(cmd) == 0: # No input
@@ -71,8 +93,16 @@ def play():
             process_cmd_with_arg(p, w, current_room, cmd[1:], "eat")
         elif len(cmd) > 1 and cmd[0] in ('get') and cmd[1] in ('in', 'on'):
             process_cmd_with_arg(p, w, current_room, cmd[2:], "enter")
+        elif len(cmd) > 1 and cmd[0] in ('bathe') and cmd[1] in ('in', 'on') and cmd[2] in ('fou', 'fount', 'fountain'):
+            process_cmd_with_arg(p, w, current_room, cmd[2:], "enter")
+        elif len(cmd) > 1 and cmd[0] in ('bathe') and cmd[1] in ('fou', 'fount', 'fountain'):
+            process_cmd_with_arg(p, w, current_room, cmd[1:], "enter")
         elif len(cmd) > 1 and cmd[0] in ('en', 'enter'):
             process_cmd_with_arg(p, w, current_room, cmd[1:], "enter")
+        elif len(cmd) > 1 and cmd[0] in ('use') and cmd[1] in ('in', 'on'):
+            process_cmd_with_arg(p, w, current_room, cmd[2:], "use")
+        elif len(cmd) > 1 and cmd[0] in ('use'):
+            process_cmd_with_arg(p, w, current_room, cmd[1:], "use")
         elif len(cmd) > 1 and cmd[0] in ('op', 'open'):
             process_cmd_with_arg(p, w, current_room, cmd[1:], "open")
         elif len(cmd) > 1 and cmd[0] in ('h', 'hit', 'k', 'kill'):
@@ -95,6 +125,10 @@ def process_standalone_cmd(p, w, action_input):
     elif action_input in ('l', 'look'):
         update_room_display = True
         display_long_desc = True
+    elif action_input in ('portal'):
+        cmd = []
+        cmd.append(action_input)
+        process_cmd_with_arg(p, w, p.current_room, cmd, "enter")
     elif action_input in ('g', 'get'):
         print("Get what?\n")
     elif action_input in ('t', 'take'):
@@ -109,6 +143,8 @@ def process_standalone_cmd(p, w, action_input):
         print("Drink what?\n")
     elif action_input in ('hit', 'k', 'kill'):
         print("Hit what?\n")
+    elif action_input in ('us', 'use'):
+        print("Use what?\n")
     elif action_input in ('i', 'in', 'inv', 'inventory'):
         p.display_inventory()
     elif action_input in ('eq', 'equip', 'equipment'):
@@ -171,6 +207,7 @@ def process_look_at_cmd(p, current_room, args):
 
 def process_cmd_with_arg(p, w, current_room, args, action):
     """ Look at <arg>, drink <arg>, eat <arg> """
+    print("args[0]", args[0])
     item = find_item(p, current_room, args[0])
 
     # If item is found, process action
@@ -179,7 +216,7 @@ def process_cmd_with_arg(p, w, current_room, args, action):
             print(item.long_desc)
         elif action == 'drink':
             print(item.drink_desc)
-            if item in p.inventory:
+            if item.drink_desc != "You can't drink from that!" and item in p.inventory:
                 p.remove_item_from_inventory(item)
         elif action == 'eat':
             if item in p.inventory:
@@ -196,9 +233,12 @@ def process_cmd_with_arg(p, w, current_room, args, action):
                         time.sleep(1)
                         print(f"You feel very {CYAN}d{ENDC}i{WHITE}ff{ENDC}ere{CYAN}nt{ENDC}.")
                         p.endgame_trigger = 1
-                p.remove_item_from_inventory(item)
+                    p.remove_item_from_inventory(item)
             elif item.key in current_room.items:
-                print("You don't have that in your inventory!\n")
+                if item.key in ("Fountain", "Portal", "Welcome Sign"):
+                    print(item.eat_desc)
+                else:
+                    print("You don't have that in your inventory!\n")
         elif action == 'enter':
             if item.key == "Fountain":
                 print("You bathe in the fountain.")
@@ -213,61 +253,91 @@ def process_cmd_with_arg(p, w, current_room, args, action):
             else:
                 print("You can't enter that!\n")
         elif action == 'open':
-            print(item.open_desc)
             if item.key == "Doors":
-                # Modify room with east exit {'north' : (room_id, "Room Name")
-                item.long_desc = "The plain wooden doors are open."
-                current_room.exits.update({'east': (7, "Inside the Wizard's Tower")})
-                current_room.display(True)
+                if item.locked:
+                    print("The doors are locked.")
+                else:
+                    print(item.open_desc)
+                    # Modify room with east exit {'north' : (room_id, "Room Name")
+                    item.long_desc = "The plain wooden doors are open."
+                    current_room.exits.update({'east': (7, "Inside the Wizard's Tower")})
+                    current_room.display(True)
             else:
                 print("You can't open that!\n")
         elif action == 'hit':
             if item.hit_desc:
                 print(item.hit_desc)
-
-                weapon_action = "punch"
-                for eq in p.equipment:
-                    if eq.key == "Dagger":
-                        weapon_action = "stab"
+                weapon_action = get_weapon_action(p)
 
                 if item.key == "Tired Mage":
-                    if p.endgame_trigger:
-                        print("\nYou <-< AnnihilatE >-> a tired mage.")
-                        current_room.remove_npc(item.key)
-                        return
-                    
-                    print(f"You barely {weapon_action} a tired mage.\n")
-                    print(f"{WHITE}A tired mage says, 'What are you doing?!'{ENDC}")
-                    time.sleep(3)
-                    print(f"You barely {weapon_action} a tired mage.\n")
-                    print(f"{WHITE}A tired mage says, 'Stop at once!'{ENDC}")
-                    print("A tired mage starts uttering some strange incantations..")
-                    time.sleep(4)
-                    print(f"You barely {weapon_action} a tired mage.\n")
-                    print(f"{WHITE}A tired mage [ [ [ ERADICATES ] ] ] you with his deadly Falling Star!{ENDC}")
-                    p.death(w)
-                # [0mBl[1;37mi[0mnd[1;37mi[0mng [31mO[1;31mR[0;31mB[1;35m![0m
-
+                    tired_mage_combat(p, w, current_room, item, weapon_action)
                 if item.key == "Resident Mage":
-                    if p.endgame_trigger:
-                        print("\nYou <-< AnnihilatE >-> the resident mage.")
-                        current_room.remove_npc(item.key)
-                        print ("You have won the game!")
-                        w.exit()
-                        return
-
-                    print(f"You barely {weapon_action} the resident mage.\n")
-                    print(f"{WHITE}The resident mage says, 'Do you think you can fight your way out of this?'{ENDC}")
-                    time.sleep(3)
-                    print(f"You barely {weapon_action} the resident mage.\n")
-                    print(f"{WHITE}A tired mage says, 'Foolish.'{ENDC}")
-                    print("A tired mage starts uttering some strange incantations..")
-                    time.sleep(4)
-                    print(f"You barely {weapon_action} the resident mage.\n")
-                    print(f"{WHITE}The resident mage . ._ ..__a T o M i Z e S__.. _. . you with his inconceivable Fireball!{ENDC}\n")
-                    p.sudden_death(w)
+                    resident_mage_combat(p, w, current_room, item, weapon_action)
             else:
                 print("You can't hit that!\n")
+        elif action == 'use':
+            # If only one arg, i.e. 'use portal' print the use description
+            if len(args) == 1:
+                if item.enterable:
+                    process_cmd_with_arg(p, w, current_room, args, "enter")
+                else:
+                    print(f"How do you propose using {item.short_desc}?")
+                return
+
+            # If more than one arg, determine target item, i.e. "use item on target"
+            target_item = find_item(p, current_room, args[1])
+
+            ###### Dagger Uses ##################################
+            # Unlock
+            if item.key == 'Dagger' and target_item.key == "Doors":
+                if target_item and target_item.locked:
+                    print("You manage to pry open the lock with the dagger!")
+                    target_item.locked = 0
+                    return
+                elif target_item and not target_item.locked:
+                    print("The door is already unlocked!")
+                    return
+
+            # Interact with environment
+            if item.key == 'Dagger' and target_item.key == "Rocks":
+                print("You push around the rocks with the dagger.")
+                return
+            
+            # Combat uses
+            if item.key == "Dagger" and target_item.key == "Tired Mage" or target_item.key == "Resident Mage":
+                weapon_action = get_weapon_action(p)
+
+                if weapon_action != "stab":
+                    print("You might have to equip it first!")
+                    return
+    
+                if target_item.key == "Tired Mage":
+                    tired_mage_combat(p, w, current_room, target_item, weapon_action)
+                    return
+                elif target_item.key == "Resident Mage":
+                    resident_mage_combat(p, w, current_room, target_item, weapon_action)
+                    return
+            ########################################################
+            
+            ###### Wafer Uses #########
+            item_in_inventory = find_item_in_inventory(p, item.key)
+
+            if item_in_inventory:
+                if item.key == "Wafer" and target_item.key == "Fountain":
+                    print("You soak the wafer in the fountain. It glows with a magical tinge.")
+                    return
+                elif item.key == "Wafer" and target_item.key in ("Rocks", "Tree"):
+                    print(f"You crush the wafer against the {(target_item.key).lower()}. It breaks into thousands of small pieces which are immediately blown away by the wind.")
+                    p.remove_item_from_inventory(item)
+                elif item.key == "Wafer" and target_item.key == "Brown Grass":
+                    print(f"You drop the wafer into the grass.")
+                    current_room.add_item(item)
+                    p.remove_item_from_inventory(item)
+                else:
+                    print(f"How do you propose using {item.short_desc} with the {args[1]}?")
+            else:
+                print("You need that item in your inventory first!")
+
         elif action == 'talk to':
             if item.talk_desc:
                 print(item.talk_desc)
@@ -275,6 +345,62 @@ def process_cmd_with_arg(p, w, current_room, args, action):
                 print(f"{WHITE}A resident mage says 'You still haven't figured it out have you?{ENDC}")
         else:
             print("Action not found!\n")
+
+def find_item_in_inventory(p, item_key):
+    for inv_item in p.inventory:
+        if inv_item.key == item_key:
+            return True
+    else:
+        return False
+
+def get_weapon_action(p):
+    weapon_action = "punch"
+    for eq in p.equipment:
+        if eq.key == "Dagger":
+            weapon_action = "stab"
+    
+    return weapon_action
+
+def tired_mage_combat(p, w, current_room, npc, weapon_action):
+    if p.endgame_trigger:
+        print(f"\n{WHITE}You <-< AnnihilatE >-> a tired mage!{ENDC}")
+        print("A tired mage has died.")
+        current_room.remove_npc(npc.key)
+        return
+                    
+    print(f"You barely {weapon_action} a tired mage.\n")
+    print(f"{WHITE}A tired mage says, 'What are you doing?!'{ENDC}")
+    time.sleep(3)
+    print(f"You barely {weapon_action} a tired mage.\n")
+    print(f"{WHITE}A tired mage says, 'Stop at once!'{ENDC}")
+    print("A tired mage starts uttering some strange incantations..")
+    time.sleep(4)
+    print(f"You barely {weapon_action} a tired mage.\n")
+    print(f"{WHITE}A tired mage [ [ [ ERADICATES ] ] ] you with his deadly Falling Star!{ENDC}")
+    p.death(w)
+
+def resident_mage_combat(p, w, current_room, npc, weapon_action):
+    if p.endgame_trigger:
+        print(f"\n{WHITE}You <-< AnnihilatE >-> the resident mage!\n{ENDC}")
+        print(f"{WHITE}The resident mage says, 'Very good.'{ENDC}")
+        time.sleep(4)
+        print("The resident mage has died.")
+
+        current_room.remove_npc(npc.key)
+        print ("\n>>>>>>> You have won the game! <<<<<<<\n")
+        w.exit()
+        return
+
+    print(f"You barely {weapon_action} the resident mage.\n")
+    print(f"{WHITE}The resident mage says, 'Do you think you can fight your way out of this?'{ENDC}")
+    time.sleep(3)
+    print(f"You barely {weapon_action} the resident mage.\n")
+    print(f"{WHITE}A tired mage says, 'Foolish.'{ENDC}")
+    print("The resident mage starts uttering some strange incantations..")
+    time.sleep(4)
+    print(f"You barely {weapon_action} the resident mage.\n")
+    print(f"{WHITE}The resident mage . ._ ..__a T o M i Z e S__.. _. . you with his inconceivable Fireball!{ENDC}\n")
+    p.sudden_death(w)
 
 def createWafer(room, wafer):
     room.add_item(wafer)
@@ -291,7 +417,8 @@ def process_get_cmd(p, w, current_room, args):
                 p.add_item_to_inventory(item)
 
                 if item.key == "Wafer":
-                    wafer_copy = Object(item.key, item.room_id, item.ground_desc, item.short_desc, item.long_desc, item.drink_desc, item.eat_desc, item.hit_desc, item.open_desc, item.hit_desc, item.takeable, item.equipable, item.enterable, item.openable, item.destination, item.npc, item.hidden, item.keywords)
+                    # Regenerate a copy of the wafer  in this room every 60 seconds
+                    wafer_copy = Object(item.key, item.room_id, item.ground_desc, item.short_desc, item.long_desc, item.drink_desc, item.eat_desc, item.hit_desc, item.open_desc, item.hit_desc, item.takeable, item.equipable, item.enterable, item.openable, item.locked, item.destination, item.npc, item.hidden, item.keywords)
                     w.timer = threading.Timer(60, createWafer, [current_room, wafer_copy])
                     w.timer.start()
 
@@ -351,8 +478,8 @@ def display_help():
     print("-----Available Commands----")
     print("Directional: (optional 'go') north, south, east, west")
     print("World actions: get <arg>, drop <arg>, look <arg>, enter <arg>, eat <arg>, drink <arg>")
-    print("Player actions: inventory, equipment, wear <arg>, remove <arg>, say <arg>")
-    print("NPC interactions: talk (to) <arg>, hit <arg>")
+    print("Player actions: inventory, equipment, wear <arg>, remove <arg>, say <arg>, use <arg> (on) <arg>")
+    print("NPC interactions: talk (to) <arg>, hit <arg>")   
     print("Game actions: loadgame, savegame\n")
 
 def display_room(w, room_id, display_long_desc_flag):
