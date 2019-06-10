@@ -207,7 +207,6 @@ def process_look_at_cmd(p, current_room, args):
 
 def process_cmd_with_arg(p, w, current_room, args, action):
     """ Look at <arg>, drink <arg>, eat <arg> """
-    print("args[0]", args[0])
     item = find_item(p, current_room, args[0])
 
     # If item is found, process action
