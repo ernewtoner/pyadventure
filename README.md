@@ -1,7 +1,7 @@
 # pyadventure
 Text-based adventure game in Python 3
 
-# Game Usage Instructions
+## Game Usage Instructions
 
 To run the program it is necessary to have access to a UNIX-based terminal, which is available on every popular operating system these days (Linux, Mac OS X terminal, Windows Linux Subsystem). The program is a Python 3 script so it is necessary to have Python 3.6 or greater installed (see https://realpython.com/installing-python/ for installation instructions for each major operating system) and run the program as follows:
 
@@ -9,7 +9,7 @@ To run the program it is necessary to have access to a UNIX-based terminal, whic
 
 The user will then see the welcome screen and the display of the starting room of the world and will be presented with an action input prompt. To navigate around the world you can type a direction (north, south, east, west) according to the available exits in a room. One can also ‘look’ to see a description of the room or an object. The ‘help’ command shows additional verbs you can use to interact with the world. 
 
-# Game Playthrough Instructions
+## Game Playthrough Instructions
 
 1. You start in the Eternal Void room and enter the portal with this or a similar command: 'en portal'
 2. The Edge of the Cliff Face room--two items can be picked up here, both of which are needed: 'pick up dagger' and 'get wafer'
