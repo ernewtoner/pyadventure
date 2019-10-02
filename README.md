@@ -3,7 +3,7 @@ Text-based adventure game in Python 3
 
 ----Game Usage Instructions----
 
-* To run the program it is necessary to have access to a UNIX-based terminal, which is available on every popular operating system these days (Linux, Mac OS X terminal, Windows Linux Subsystem). The program is a Python 3 script so it is necessary to have Python 3.6 or greater installed (see https://realpython.com/installing-python/ for installation instructions for each major operating system) and run the program as follows:
+To run the program it is necessary to have access to a UNIX-based terminal, which is available on every popular operating system these days (Linux, Mac OS X terminal, Windows Linux Subsystem). The program is a Python 3 script so it is necessary to have Python 3.6 or greater installed (see https://realpython.com/installing-python/ for installation instructions for each major operating system) and run the program as follows:
 
 'python3 game.py'
 
